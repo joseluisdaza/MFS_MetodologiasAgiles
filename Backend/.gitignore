@@ -1,0 +1,28 @@
+# Build Folders / Files
+bin/
+obj/
+
+# User-specific Files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio Code
+.vscode/
+
+# DotNet Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Environment Variables
+.env
+
+# Others
+.DS_Store
+Thumbs.db

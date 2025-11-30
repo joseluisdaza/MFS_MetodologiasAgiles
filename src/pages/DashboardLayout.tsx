@@ -11,6 +11,13 @@ function DashboardLayout() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const handleLogout = () => {
+    // Si más adelante usas token:
+    // localStorage.removeItem("token");
+
+    navigate("/"); // Redirige al login
+  };
+
   return (
     <div className="dashboard-layout">
       {/* SIDEBAR */}
@@ -18,34 +25,19 @@ function DashboardLayout() {
         <h2>Catastro</h2>
         <nav>
           <ul>
-            <li
-              className={isActive("/dashboard") ? "active" : ""}
-              onClick={() => goTo("/dashboard")}
-            >
+            <li className={isActive("/dashboard") ? "active" : ""} onClick={() => goTo("/dashboard")}>
               Resumen
             </li>
-            <li
-              className={isActive("/dashboard/usuarios") ? "active" : ""}
-              onClick={() => goTo("/dashboard/usuarios")}
-            >
+            <li className={isActive("/dashboard/usuarios") ? "active" : ""} onClick={() => goTo("/dashboard/usuarios")}>
               Usuarios
             </li>
-            <li
-              className={isActive("/dashboard/propiedades") ? "active" : ""}
-              onClick={() => goTo("/dashboard/propiedades")}
-            >
+            <li className={isActive("/dashboard/propiedades") ? "active" : ""} onClick={() => goTo("/dashboard/propiedades")}>
               Propiedades
             </li>
-            <li
-              className={isActive("/dashboard/propietarios") ? "active" : ""}
-              onClick={() => goTo("/dashboard/propietarios")}
-            >
+            <li className={isActive("/dashboard/propietarios") ? "active" : ""} onClick={() => goTo("/dashboard/propietarios")}>
               Propietarios
             </li>
-            <li
-              className={isActive("/dashboard/reportes") ? "active" : ""}
-              onClick={() => goTo("/dashboard/reportes")}
-            >
+            <li className={isActive("/dashboard/reportes") ? "active" : ""} onClick={() => goTo("/dashboard/reportes")}>
               Reportes
             </li>
           </ul>
@@ -56,7 +48,11 @@ function DashboardLayout() {
       <main className="dashboard-main">
         <header className="dashboard-header">
           <h1>Panel de Gestión Catastral</h1>
-          <span className="dashboard-user">Admin</span>
+
+          {/* 👇 BOTÓN DE LOGOUT */}
+          <button className="logout-btn" onClick={handleLogout}>
+            Cerrar sesión
+          </button>
         </header>
 
         <section className="dashboard-content">

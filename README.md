@@ -1,43 +1,77 @@
-# MFS_MetodologiasAgiles# MSD_CondoAdminBE
+# React + TypeScript + Vite
 
-# Administrador de Condominios Backend
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Repositorio
+Currently, two official plugins are available:
 
-https://github.com/joseluisdaza/MFS_MetodologiasAgiles.git
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Objetivo del proyecto
+## React Compiler
 
-Implementar un prototipo de sistema web para la gestión de bienes inmuebles.
-Implementar un prototipo de sistema web para el registro, uso y mantenimiento de bienes inmuebles.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-### Actores involucrados
+## Expanding the ESLint configuration
 
-| Actor                        | Detalle                                                      |
-| ---------------------------- | ------------------------------------------------------------ |
-| StakeHolder                  | Propietario<br>Funcionario<br>Supervisor<br>Docente          |
-| Equipo de desarrollo         | Desarrolladores<br>Ingenieros de calidad<br>Business analyst |
-| Project Manager/Scrum Master | José Daza                                                    |
-| Product Owner                | Equipo                                                       |
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## Fases y entregables
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-| Fase                              | Inicio     | Fin        | Entregable                                                |
-| --------------------------------- | ---------- | ---------- | --------------------------------------------------------- |
-| 01 - Definición de requerimientos | 10/11/2025 | 12/11/2025 | Documento de requerimientos funcionales y no funcionales. |
-| 02 - Casos de uso                 | 12/11/2025 | 17/11/2025 | Documento con casos de uso                                |
-| 03 - Correcciones/Observaciones   | 17/11/2025 | 19/11/2025 | Documentos corregidos                                     |
-| 04 - Product Backlog              | 19/11/2025 | 21/11/2025 | Definir historias de usuario y sprints - Forecast         |
-| 05 - Sprint 01                    | 21/11/2025 | 24/11/2025 |                                                           |
-| 06 - Sprint 02                    | 24/11/2025 | 26/11/2025 |                                                           |
-| 07 - Sprint 03                    | 26/11/2025 | 28/11/2025 |                                                           |
-| 08 - Sprint 04                    | 28/11/2025 | 01/12/2025 |                                                           |
-| 09 - Sprint 05                    | 01/12/2025 | 03/12/2025 |                                                           |
-| 10 - Sprint 06                    | 03/12/2025 | 05/12/2025 |                                                           |
-| 11 - Sprint 07 - Final            | 05/12/2025 | 08/12/2025 |                                                           |
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-## Riesgos principales
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-Si los requerimientos funcionales o no funcionales no se definen con precisión desde el inicio puede haber un doble trabajo.
-Al ser un prototipo puede no contemplar escalabilidad, seguridad o persistencia real, lo que pueda limitar la aplicabilidad futura.
-El retraso de cualquier sprint puede comprometer los entregable finales.
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+
+npm run dev       # Levanta el servidor de desarrollo
+npm run build     # Compila para producción
+npm run preview   # Previsualiza el build

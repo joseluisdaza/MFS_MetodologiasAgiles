@@ -1,5 +1,6 @@
 import "../styles/dashboard.css";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 function DashboardLayout() {
   const navigate = useNavigate();
@@ -12,11 +13,17 @@ function DashboardLayout() {
   const isActive = (path: string) => location.pathname === path;
 
   const handleLogout = () => {
-    // Si más adelante usas token:
-    // localStorage.removeItem("token");
-
-    navigate("/"); // Redirige al login
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   return (
     <div className="dashboard-layout">

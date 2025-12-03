@@ -36,14 +36,30 @@ const validate = () => {
   return Object.keys(err).length === 0;
 };
 
-  const handleLogin = (e: FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
-    if (username === "admin@gmail.com" && password === "1234") {
-        navigate("/dashboard");
-    }else{
-      setErrors({ general: 'Credenciales incorrectas' });
+    setErrors({});
+    try {
+      const res = await fetch('/api/users/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: username, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setErrors({ general: data?.message ?? 'Credenciales incorrectas' });
+        return;
+      }
+
+      const data = await res.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate('/dashboard');
+    } catch {
+      setErrors({ general: 'No se pudo conectar al servidor' });
     }
   };
 

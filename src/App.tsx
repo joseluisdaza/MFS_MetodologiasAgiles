@@ -7,6 +7,7 @@ import UsuariosPage from "./pages/UsuariosPage";
 import PropiedadesPage from "./pages/PropiedadesPage";
 import PropietariosPage from "./pages/PropietariosPage";
 import ReportesPage from "./pages/ReportesPage";
+import ImportarDatosPage from "./pages/ImportarDatosPage";
 import "./App.css";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="propiedades" element={<PropiedadesPage />} />
           <Route path="propietarios" element={<PropietariosPage />} />
           <Route path="reportes" element={<ReportesPage />} />
+          <Route path="importar" element={<ImportarDatosPage />} />
         </Route>
       </Routes>
     </Router>

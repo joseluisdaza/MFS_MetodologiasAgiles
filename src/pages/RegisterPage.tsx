@@ -103,7 +103,6 @@ const validate = () => {
               placeholder="Nombre completo"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              onBlur={validate}
             />
             {errors.name && (
               <span className="error-text">{errors.name}</span>
@@ -114,7 +113,6 @@ const validate = () => {
               placeholder="Nombre de usuario"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              onBlur={validate}
             />
             {errors.username && (
               <span className="error-text">{errors.username}</span>
@@ -125,7 +123,6 @@ const validate = () => {
               placeholder="Correo electrónico"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              onBlur={validate}
             />
             {errors.email && (
               <span className="error-text">{errors.email}</span>
@@ -136,7 +133,6 @@ const validate = () => {
               placeholder="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onBlur={validate}
             />
             {errors.password && (
               <span className="error-text">{errors.password}</span>
@@ -147,13 +143,12 @@ const validate = () => {
               placeholder="Confirmar contraseña"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              onBlur={validate}
             />
             {errors.confirmPassword && (
               <span className="error-text">{errors.confirmPassword}</span>
             )}
 
-            <select value={role} onChange={(e) => setRole(e.target.value)} onBlur={validate}>
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="viewer">viewer</option>
               <option value="admin">admin</option>
             </select>

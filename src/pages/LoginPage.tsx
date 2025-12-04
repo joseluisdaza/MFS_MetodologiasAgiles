@@ -76,7 +76,6 @@ const validate = () => {
             placeholder="Correo electrónico"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            onBlur={validate}
             />
             {errors.username && (
               <span className="error-text">{errors.username}</span>
@@ -87,7 +86,6 @@ const validate = () => {
               placeholder="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onBlur={validate}
             />
             {errors.password && (
               <span className="error-text">{errors.password}</span>

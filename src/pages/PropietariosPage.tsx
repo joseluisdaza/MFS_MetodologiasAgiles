@@ -154,7 +154,6 @@ function PropietariosPage() {
             placeholder="Nombre completo"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            onBlur={validate}
           />
           {errors.nombre && (<span className="error-text">{errors.nombre}</span>)}
           <input
@@ -162,7 +161,6 @@ function PropietariosPage() {
             placeholder="CI/NIT"
             value={ci}
             onChange={(e) => setCi(e.target.value)}
-            onBlur={validate}
           />
           {errors.ci && (<span className="error-text">{errors.ci}</span>)}
           <input
@@ -170,7 +168,6 @@ function PropietariosPage() {
             placeholder="Teléfono"
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
-            onBlur={validate}
           />
           {errors.telefono && (<span className="error-text">{errors.telefono}</span>)}
         </div>

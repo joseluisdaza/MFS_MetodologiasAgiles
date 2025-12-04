@@ -55,14 +55,14 @@ function DashboardLayout() {
                 <li className={isActive("/dashboard") ? "active" : ""} onClick={() => goTo("/dashboard")}>
                   Resumen
                 </li>
-                <li className={isActive("/dashboard/usuarios") ? "active" : ""} onClick={() => goTo("/dashboard/usuarios")}>
-                  Usuarios
-                </li>
                 <li className={isActive("/dashboard/propiedades") ? "active" : ""} onClick={() => goTo("/dashboard/propiedades")}>
                   Propiedades
                 </li>
                 <li className={isActive("/dashboard/propietarios") ? "active" : ""} onClick={() => goTo("/dashboard/propietarios")}>
                   Propietarios
+                </li>
+                <li className={isActive("/dashboard/importar") ? "active" : ""} onClick={() => goTo("/dashboard/importar")}>
+                  Importar Datos
                 </li>
               </>
             )}

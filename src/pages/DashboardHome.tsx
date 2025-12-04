@@ -17,11 +17,6 @@ function DashboardHome() {
 
   const cards = [
     {
-      key: "usuarios",
-      title: "Usuarios",
-      description: "Gestión de usuarios del sistema.",
-    },
-    {
       key: "propiedades",
       title: "Propiedades",
       description: "Administración de propiedades catastrales.",

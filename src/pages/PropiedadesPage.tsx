@@ -278,32 +278,35 @@ function OwnersModal({ propiedad, onClose }: { propiedad: Propiedad; onClose: ()
   const candidates = allOwners.filter(o => o.name.toLowerCase().includes(search.toLowerCase()) && !owners.some(ow => ow.id === o.id));
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <h3>Propietarios de {propiedad.numero_inmueble}</h3>
-        {error && (<div className="error-general">{error}</div>)}
-        <div>
-          {owners.length === 0 && (<div>No hay propietarios asociados.</div>)}
-          {owners.map(o => (
-            <div key={o.id} className="modal-row">
-              <span>{o.name} ({o.ciNit})</span>
-              <button onClick={() => removeOwner(o.id)}>Quitar</button>
-            </div>
-          ))}
-        </div>
-        <hr />
-        <div>
-          <input type="text" placeholder="Buscar propietario por nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
-          {candidates.slice(0, 10).map(o => (
-            <div key={o.id} className="modal-row">
-              <span>{o.name} ({o.ciNit})</span>
-              <button onClick={() => addOwner(o.id)}>Agregar</button>
-            </div>
-          ))}
-          {candidates.length === 0 && (<div>No hay resultados.</div>)}
-        </div>
-        <div className="modal-actions">
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: '80vw', maxWidth: 900, height: '80vh', background: '#fff', borderRadius: 8, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: 8, borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between' }}>
+          <strong>Propietarios de {propiedad.numero_inmueble}</strong>
           <button onClick={onClose}>Cerrar</button>
+        </div>
+        <div style={{ display: 'flex', gap: 16, padding: 12, flex: 1, overflow: 'auto' }}>
+          <div style={{ flex: 1 }}>
+            {error && (<div className="error-general">{error}</div>)}
+            <h4>Asociados</h4>
+            {owners.length === 0 && (<div>No hay propietarios asociados.</div>)}
+            {owners.map(o => (
+              <div key={o.id} className="modal-row" style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0' }}>
+                <span>{o.name} ({o.ciNit})</span>
+                <button onClick={() => removeOwner(o.id)}>Quitar</button>
+              </div>
+            ))}
+          </div>
+          <div style={{ flex: 1 }}>
+            <h4>Agregar</h4>
+            <input type="text" placeholder="Buscar propietario por nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
+            {candidates.slice(0, 10).map(o => (
+              <div key={o.id} className="modal-row" style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0' }}>
+                <span>{o.name} ({o.ciNit})</span>
+                <button onClick={() => addOwner(o.id)}>Agregar</button>
+              </div>
+            ))}
+            {candidates.length === 0 && (<div>No hay resultados.</div>)}
+          </div>
         </div>
       </div>
     </div>

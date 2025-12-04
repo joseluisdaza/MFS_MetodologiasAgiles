@@ -1,7 +1,19 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useMemo } from "react";
 
 function DashboardHome() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const role: string | null = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("user");
+      if (!raw) return null;
+      const u = JSON.parse(raw);
+      return u?.role ?? null;
+    } catch {
+      return null;
+    }
+  }, [location.pathname]);
 
   const cards = [
     {
@@ -19,11 +31,9 @@ function DashboardHome() {
       title: "Propietarios",
       description: "Registro de propietarios y sus datos.",
     },
-    {
-      key: "reportes",
-      title: "Reportes",
-      description: "Consultas para los diferentes Reportes.",
-    },
+    ...(role === "viewer"
+      ? [{ key: "reportes", title: "Reportes", description: "Consultas para los diferentes Reportes." }]
+      : []),
   ];
 
   return (

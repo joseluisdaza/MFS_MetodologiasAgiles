@@ -1,6 +1,6 @@
 import "../styles/dashboard.css";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 function DashboardLayout() {
   const navigate = useNavigate();
@@ -18,12 +18,30 @@ function DashboardLayout() {
     navigate("/");
   };
 
+  const role: string | null = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("user");
+      if (!raw) return null;
+      const u = JSON.parse(raw);
+      return u?.role ?? null;
+    } catch {
+      return null;
+    }
+  }, [location.pathname]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/");
+      return;
     }
-  }, [navigate]);
+    if (role === "viewer" && location.pathname !== "/dashboard/reportes") {
+      navigate("/dashboard/reportes");
+    }
+    if (role !== "viewer" && location.pathname === "/dashboard/reportes") {
+      navigate("/dashboard");
+    }
+  }, [navigate, role, location.pathname]);
 
   return (
     <div className="dashboard-layout">
@@ -32,21 +50,27 @@ function DashboardLayout() {
         <h2>Catastro</h2>
         <nav>
           <ul>
-            <li className={isActive("/dashboard") ? "active" : ""} onClick={() => goTo("/dashboard")}>
-              Resumen
-            </li>
-            <li className={isActive("/dashboard/usuarios") ? "active" : ""} onClick={() => goTo("/dashboard/usuarios")}>
-              Usuarios
-            </li>
-            <li className={isActive("/dashboard/propiedades") ? "active" : ""} onClick={() => goTo("/dashboard/propiedades")}>
-              Propiedades
-            </li>
-            <li className={isActive("/dashboard/propietarios") ? "active" : ""} onClick={() => goTo("/dashboard/propietarios")}>
-              Propietarios
-            </li>
-            <li className={isActive("/dashboard/reportes") ? "active" : ""} onClick={() => goTo("/dashboard/reportes")}>
-              Reportes
-            </li>
+            {role !== "viewer" && (
+              <>
+                <li className={isActive("/dashboard") ? "active" : ""} onClick={() => goTo("/dashboard")}>
+                  Resumen
+                </li>
+                <li className={isActive("/dashboard/usuarios") ? "active" : ""} onClick={() => goTo("/dashboard/usuarios")}>
+                  Usuarios
+                </li>
+                <li className={isActive("/dashboard/propiedades") ? "active" : ""} onClick={() => goTo("/dashboard/propiedades")}>
+                  Propiedades
+                </li>
+                <li className={isActive("/dashboard/propietarios") ? "active" : ""} onClick={() => goTo("/dashboard/propietarios")}>
+                  Propietarios
+                </li>
+              </>
+            )}
+            {role === "viewer" && (
+              <li className={isActive("/dashboard/reportes") ? "active" : ""} onClick={() => goTo("/dashboard/reportes")}>
+                Reportes
+              </li>
+            )}
           </ul>
         </nav>
       </aside>

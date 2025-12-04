@@ -14,6 +14,13 @@ interface Propiedad {
   ubicacion: string;
 }
 
+interface Owner {
+  id: string;
+  name: string;
+  ciNit: string;
+  phone: string;
+}
+
 function PropiedadesPage() {
   const navigate = useNavigate();
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
@@ -28,6 +35,7 @@ function PropiedadesPage() {
   const [ubicacion, setUbicacion] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
+  const [ownersModal, setOwnersModal] = useState<{ open: boolean; propiedad?: Propiedad }>({ open: false });
 
   const validate = () => {
     if (!numero_inmueble.trim()) return "Número de inmueble es obligatorio";
@@ -131,6 +139,10 @@ function PropiedadesPage() {
     } catch { setError('No se pudo conectar al servidor'); }
   };
 
+  const openOwnersModal = (p: Propiedad) => {
+    setOwnersModal({ open: true, propiedad: p });
+  };
+
   return (
     <div>
       <h2>Gestión de Propiedades</h2>
@@ -182,6 +194,7 @@ function PropiedadesPage() {
               <td>
                 <button onClick={() => handleEdit(p)}>Editar</button>
                 <button onClick={() => handleDelete(p.id)}>Eliminar</button>
+                <button onClick={() => openOwnersModal(p)}>Propietarios</button>
               </td>
             </tr>
           ))}
@@ -194,6 +207,105 @@ function PropiedadesPage() {
           )}
         </tbody>
       </table>
+      {ownersModal.open && ownersModal.propiedad && (
+        <OwnersModal propiedad={ownersModal.propiedad} onClose={() => setOwnersModal({ open: false })} />
+      )}
+    </div>
+  );
+}
+
+function OwnersModal({ propiedad, onClose }: { propiedad: Propiedad; onClose: () => void }) {
+  const [owners, setOwners] = useState<Owner[]>([]);
+  const [allOwners, setAllOwners] = useState<Owner[]>([]);
+  const [search, setSearch] = useState("");
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    fetch(`/api/properties/${propiedad.id}/owners`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setOwners(data as Owner[]);
+      })
+      .catch(() => {});
+
+    fetch('/api/owners')
+      .then(async (res) => {
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setAllOwners(data as Owner[]);
+      })
+      .catch(() => {});
+  }, [propiedad.id]);
+
+  const addOwner = async (ownerId: string) => {
+    const token = localStorage.getItem('token');
+    if (!token) { setError('Debe iniciar sesión'); return; }
+    try {
+      const res = await fetch(`/api/properties/${propiedad.id}/owners`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ ownerId })
+      });
+      if (!res.ok) {
+        const d = await res.json().catch(() => null);
+        setError(d?.message ?? 'No se pudo agregar propietario');
+        return;
+      }
+      const added = allOwners.find(o => o.id === ownerId);
+      if (added) setOwners(prev => [...prev, added]);
+    } catch {
+      setError('No se pudo conectar al servidor');
+    }
+  };
+
+  const removeOwner = async (ownerId: string) => {
+    const token = localStorage.getItem('token');
+    if (!token) { setError('Debe iniciar sesión'); return; }
+    try {
+      const res = await fetch(`/api/properties/${propiedad.id}/owners/${ownerId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      if (!res.ok) {
+        const d = await res.json().catch(() => null);
+        setError(d?.message ?? 'No se pudo eliminar propietario');
+        return;
+      }
+      setOwners(prev => prev.filter(o => o.id !== ownerId));
+    } catch {
+      setError('No se pudo conectar al servidor');
+    }
+  };
+
+  const candidates = allOwners.filter(o => o.name.toLowerCase().includes(search.toLowerCase()) && !owners.some(ow => ow.id === o.id));
+
+  return (
+    <div className="modal-backdrop">
+      <div className="modal">
+        <h3>Propietarios de {propiedad.numero_inmueble}</h3>
+        {error && (<div className="error-general">{error}</div>)}
+        <div>
+          {owners.length === 0 && (<div>No hay propietarios asociados.</div>)}
+          {owners.map(o => (
+            <div key={o.id} className="modal-row">
+              <span>{o.name} ({o.ciNit})</span>
+              <button onClick={() => removeOwner(o.id)}>Quitar</button>
+            </div>
+          ))}
+        </div>
+        <hr />
+        <div>
+          <input type="text" placeholder="Buscar propietario por nombre" value={search} onChange={(e) => setSearch(e.target.value)} />
+          {candidates.slice(0, 10).map(o => (
+            <div key={o.id} className="modal-row">
+              <span>{o.name} ({o.ciNit})</span>
+              <button onClick={() => addOwner(o.id)}>Agregar</button>
+            </div>
+          ))}
+          {candidates.length === 0 && (<div>No hay resultados.</div>)}
+        </div>
+        <div className="modal-actions">
+          <button onClick={onClose}>Cerrar</button>
+        </div>
+      </div>
     </div>
   );
 }
